@@ -13,17 +13,22 @@ exports.createProduct = catchAsynErrors(async (req, res, next) => {
 
 //GET ALL PRODUCTS
 exports.getAllProduct = catchAsynErrors(async (req, res) => {
+  const resultPerPage = 5;
+
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
-    .filter();
+    .filter()
+    .pagination(resultPerPage);
   const products = await apiFeature.query;
 
   res.status(200).json({ success: true, products });
 });
 
-//Get product Info
+//Get product  details
 
 exports.getProductDetails = catchAsynErrors(async (req, res, next) => {
+  const productCount = await Product.countDocuments();
+
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -32,6 +37,7 @@ exports.getProductDetails = catchAsynErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     product,
+    productCount,
   });
 });
 
