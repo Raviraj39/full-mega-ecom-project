@@ -1,9 +1,9 @@
 const Product = require("../models/productModels");
 const ErrorHandler = require("../utils/errorHandler");
-const catchAsynErrors = require("../middleware/catchAsyncErrors");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/apifeatures");
 //create product -ADMIN
-exports.createProduct = catchAsynErrors(async (req, res, next) => {
+exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
@@ -12,7 +12,7 @@ exports.createProduct = catchAsynErrors(async (req, res, next) => {
 });
 
 //GET ALL PRODUCTS
-exports.getAllProduct = catchAsynErrors(async (req, res) => {
+exports.getAllProduct = catchAsyncErrors(async (req, res) => {
   const resultPerPage = 5;
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
@@ -26,7 +26,7 @@ exports.getAllProduct = catchAsynErrors(async (req, res) => {
 
 //Get product  details
 
-exports.getProductDetails = catchAsynErrors(async (req, res, next) => {
+exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
   const productCount = await Product.countDocuments();
 
   const product = await Product.findById(req.params.id);
@@ -43,7 +43,7 @@ exports.getProductDetails = catchAsynErrors(async (req, res, next) => {
 
 //update product --admin
 
-exports.updateProduct = catchAsynErrors(async (req, res, next) => {
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
   if (!product) {
     return next(new ErrorHandler("product not updated"), 404);
@@ -62,7 +62,7 @@ exports.updateProduct = catchAsynErrors(async (req, res, next) => {
 
 //delete product
 
-exports.deleteProduct = catchAsynErrors(async (req, res, next) => {
+exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
     return next(new ErrorHandler("product not found"), 404);

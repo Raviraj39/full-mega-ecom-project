@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     minLength: [8, "Password should have more than 8 character"],
     select: false,
   },
-  avtar: {
+  avatar: {
     public_id: {
       type: String,
       required: true,
@@ -50,9 +50,15 @@ userSchema.pre("save", async function (next) {
 //JWT token
 
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }.process.env.JWT_SECRET, {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
+};
+
+//compare password
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model("User", userSchema);
