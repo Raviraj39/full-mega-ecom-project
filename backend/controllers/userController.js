@@ -55,3 +55,21 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
     message: "Logged Out",
   });
 });
+
+
+//forgot password
+
+exports.forgotPassword = catchAsyncErrors (async(req,res,next)=>{
+  const user = await User.findOne({email:req.body.email});
+  if (!user){
+    return next(new ErrorHandler("user not found",404));
+  }
+
+  //get resetpassword token
+  const resetToken = user.getResetPasswordToken();
+  await user.save({validateBeforeSave :false});
+
+  const resetPasswordUrl=`${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`
+
+  const massage = `your password reset Token is : \n\n ${resetPasswordUrl}  \n\n`
+})
